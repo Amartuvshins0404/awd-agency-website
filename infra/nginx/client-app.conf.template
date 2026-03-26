@@ -1,0 +1,61 @@
+# Nginx server block template for AWD Agency client apps
+# Usage: Copy to /etc/nginx/sites-available/<CLIENT_DOMAIN>
+# Replace: CLIENT_DOMAIN, APP_PORT, APP_NAME
+#
+# Then run:
+#   sudo ln -s /etc/nginx/sites-available/<CLIENT_DOMAIN> /etc/nginx/sites-enabled/
+#   sudo nginx -t && sudo systemctl reload nginx
+#   sudo certbot --nginx -d <CLIENT_DOMAIN> -d www.<CLIENT_DOMAIN>
+
+server {
+    listen 80;
+    listen [::]:80;
+
+    server_name CLIENT_DOMAIN www.CLIENT_DOMAIN;
+
+    # Redirect HTTP to HTTPS (Certbot will manage this after cert issuance)
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+
+    server_name CLIENT_DOMAIN www.CLIENT_DOMAIN;
+
+    # SSL managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/CLIENT_DOMAIN/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/CLIENT_DOMAIN/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    # Logging
+    access_log /var/log/nginx/APP_NAME-access.log;
+    error_log  /var/log/nginx/APP_NAME-error.log;
+
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+    # Proxy to Next.js PM2 process
+    location / {
+        proxy_pass          http://127.0.0.1:APP_PORT;
+        proxy_http_version  1.1;
+        proxy_set_header    Upgrade $http_upgrade;
+        proxy_set_header    Connection 'upgrade';
+        proxy_set_header    Host $host;
+        proxy_set_header    X-Real-IP $remote_addr;
+        proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header    X-Forwarded-Proto $scheme;
+        proxy_cache_bypass  $http_upgrade;
+        proxy_read_timeout  60s;
+    }
+
+    # Cache static assets (Next.js _next/static)
+    location /_next/static/ {
+        proxy_pass          http://127.0.0.1:APP_PORT/_next/static/;
+        proxy_cache_valid   200 365d;
+        add_header          Cache-Control "public, max-age=31536000, immutable";
+    }
+}
