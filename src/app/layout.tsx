@@ -1,53 +1,46 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
-import { GoogleAnalytics } from "@/components/google-analytics";
+import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-cormorant",
+  display: "swap",
+});
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-dm-sans",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
-  title: {
-    default: process.env.NEXT_PUBLIC_SITE_NAME ?? "AWD Agency",
-    template: `%s | ${process.env.NEXT_PUBLIC_SITE_NAME ?? "AWD Agency"}`,
-  },
+  title: "AWD Agency | Монгол бизнесийн вэб шийдэл",
   description:
-    process.env.NEXT_PUBLIC_SITE_DESCRIPTION ??
-    "Building modern web applications for your business.",
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://awd.mn",
-  ),
+    "AWD Agency — монгол бизнесүүдэд зориулсан дэвшилтэт вэб сайт, онлайн дэлгүүр, вэб апп хөгжүүлэлт. Мэргэжлийн дизайн, хурдан хүргэлт.",
+  keywords: "вэб сайт, онлайн дэлгүүр, вэб хөгжүүлэлт, монгол, AWD Agency",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://awd.mn"),
   openGraph: {
+    title: "AWD Agency | Монгол бизнесийн вэб шийдэл",
+    description:
+      "Монгол бизнест зориулсан мэргэжлийн вэб шийдэл — хурдан, үзэсгэлэнтэй, ашигтай",
     type: "website",
-    siteName: process.env.NEXT_PUBLIC_SITE_NAME ?? "AWD Agency",
-    images: [
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: process.env.NEXT_PUBLIC_SITE_NAME ?? "AWD Agency",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    images: ["/og-image.png"],
+    locale: "mn_MN",
+    siteName: "AWD Agency",
   },
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} min-h-screen flex flex-col antialiased`}>
-        <GoogleAnalytics />
-        <Header />
-        <main className="flex-1">{children}</main>
-        <Footer />
+    <html lang="mn" className={`${cormorant.variable} ${dmSans.variable}`}>
+      <body className="grain-overlay bg-bg text-text-primary antialiased">
+        {children}
       </body>
     </html>
   );
