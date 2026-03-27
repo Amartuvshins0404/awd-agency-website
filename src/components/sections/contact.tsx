@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
+import { submitContactForm } from "@/app/contact/actions";
 
 export function Contact() {
   const sectionRef = useScrollReveal<HTMLElement>();
@@ -11,9 +12,12 @@ export function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("sending");
-    // Simulate submit — connect to API when ready
-    await new Promise((r) => setTimeout(r, 1200));
-    setStatus("sent");
+    try {
+      await submitContactForm(form);
+      setStatus("sent");
+    } catch {
+      setStatus("error");
+    }
   };
 
   return (

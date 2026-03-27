@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import "./globals.css";
+import { GoogleAnalytics } from "@/components/google-analytics";
 
 const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
@@ -40,6 +41,7 @@ export default function RootLayout({
   return (
     <html lang="mn" className={`${cormorant.variable} ${dmSans.variable}`}>
       <body className="grain-overlay bg-bg text-text-primary antialiased">
+        <GoogleAnalytics />
         {children}
       </body>
     </html>
