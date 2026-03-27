@@ -2,7 +2,16 @@
 
 import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
-const projects = [
+interface ProjectItem {
+  title: string;
+  category: string;
+  description: string;
+  color: string;
+  mockIcon: string;
+  tags: string[];
+}
+
+const projects: ProjectItem[] = [
   {
     title: "Номин Трейдинг",
     category: "Онлайн дэлгүүр",
@@ -41,7 +50,7 @@ const projects = [
   },
 ];
 
-function ProjectCard({ project, delay }: { project: typeof projects[0]; delay: number }) {
+function ProjectCard({ project, delay }: { project: ProjectItem; delay: number }) {
   return (
     <div
       className={`reveal delay-${delay} group card-hover relative rounded-xl border border-line bg-surface/60 overflow-hidden cursor-default`}

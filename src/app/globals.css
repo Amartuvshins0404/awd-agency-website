@@ -129,13 +129,6 @@
     transform: scale(1);
   }
 
-  /* Delay utilities */
-  .delay-100 { transition-delay: 100ms; }
-  .delay-200 { transition-delay: 200ms; }
-  .delay-300 { transition-delay: 300ms; }
-  .delay-400 { transition-delay: 400ms; }
-  .delay-500 { transition-delay: 500ms; }
-
   /* Glow effects */
   .glow-gold {
     box-shadow: 0 0 20px #bf8d3c20, 0 0 60px #bf8d3c08;
@@ -229,4 +222,21 @@
 }
 @keyframes spin-slow {
   100% { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [style*="spin-slow"],
+  .animate-spin-slow {
+    animation: none !important;
+  }
+  .hero-tagline, .hero-title-1, .hero-title-2,
+  .hero-subtitle, .hero-cta, .hero-stats, .hero-visual {
+    animation: none !important;
+    opacity: 1;
+  }
+  .reveal, .reveal-scale {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }

@@ -23,8 +23,6 @@ export function useScrollReveal<T extends HTMLElement>(
       { threshold, rootMargin: "0px 0px -40px 0px" }
     );
 
-    // Observe the element and its children with reveal class
-    observer.observe(el);
     const children = el.querySelectorAll(".reveal, .reveal-scale");
     children.forEach((child) => observer.observe(child));
 
